@@ -27,6 +27,11 @@ def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', title=post.title, post=post)
 
+@posts.route("/links<string:post_id>")
+def links(post_id):
+    #post = Post.query.get_or_404(post_id)
+    return render_template('link.html', title=post.link, post=post)    
+
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -38,6 +43,7 @@ def update_post(post_id):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        post.link = form.link.data
         db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('posts.post', post_id=post.id))
