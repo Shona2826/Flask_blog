@@ -13,7 +13,7 @@ posts = Blueprint('posts', __name__)
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        post = Post(title=form.title.data, content=form.content.data,link=form.link.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -26,11 +26,6 @@ def new_post():
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', title=post.title, post=post)
-
-@posts.route("/links<string:post_id>")
-def links(post_id):
-    #post = Post.query.get_or_404(post_id)
-    return render_template('link.html', title=post.link, post=post)    
 
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -50,6 +45,7 @@ def update_post(post_id):
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
+        form.link.data = post.link
     return render_template('create_post.html', title='Update Post',
                            form=form, legend='Update Post')
 
